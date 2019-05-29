@@ -1,0 +1,3 @@
+rootProject.name = 'RestaurantNearBy'
+
+include ':app'
