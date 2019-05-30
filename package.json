@@ -8,8 +8,14 @@
     "build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "react": "16.8.3",
-    "react-native": "0.59.8"
+    "react-native": "0.59.8",
+    "react-native-gesture-handler": "^1.2.2",
+    "react-navigation": "^3.11.0",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1",
+    "redux-promise-middleware": "^6.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
