@@ -94500,20 +94500,47 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var _objectSpread2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[1], "@babel/runtime/helpers/objectSpread"));
 
-  var _readOnlyError2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[2], "@babel/runtime/helpers/readOnlyError"));
+  var _redux = _$$_REQUIRE(_dependencyMap[2], "redux");
 
-  var _redux = _$$_REQUIRE(_dependencyMap[3], "redux");
+  var _RestaurantConsts = _$$_REQUIRE(_dependencyMap[3], "./RestaurantConsts");
 
-  var _RestaurantConsts = _$$_REQUIRE(_dependencyMap[4], "./RestaurantConsts");
+  var _models = _$$_REQUIRE(_dependencyMap[4], "./models");
 
   var INITIAL_STATE = {
-    selected: {},
     candidates: [],
     dataFetched: false,
     isFetching: false,
     error: false,
     response: {}
   };
+
+  function toResaurants(jArray) {
+    var restaurants = [];
+
+    try {
+      for (var index = 0; jArray.length; index++) {
+        var id = index + 1;
+        var j_item = jArray[index];
+        var location = new _models.Location(j_item.location.latitude, j_item.location.longitude);
+        var restaurant = new _models.Restaurant();
+        restaurant.id = id;
+        restaurant.address = j_item.address;
+        restaurant.city = j_item.city;
+        restaurant.distance = j_item.distance;
+        restaurant.location = location;
+        restaurant.name = j_item.name;
+        restaurant.price = j_item.price;
+        restaurant.province = j_item.province;
+        restaurant.rating = j_item.rating;
+        restaurant.time = j_item.time;
+        restaurants.push(restaurant);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    return restaurants;
+  }
 
   var restaurantsReducer = function restaurantsReducer() {
     var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
@@ -94530,7 +94557,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
       case _RestaurantConsts.FETCH_RESTAURANTS_FULFILLED:
         result = (0, _objectSpread2.default)({}, state, {
-          response: action.payload,
+          candidates: toResaurants(action.payload),
           isFetching: false,
           dataFetched: true
         });
@@ -94543,18 +94570,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           error: true
         });
         console.log('Error Happened during fetching');
-        break;
-
-      case _RestaurantConsts.PICK_RESTAURANT:
-        var selected = state.selected,
-            candidates = state.candidates;
-        var pickedRestaurant = possible.splice(action.payload, 1)[0];
-        selected = ((0, _readOnlyError2.default)("selected"), pickedRestaurant);
-        var newState = {
-          selected: selected,
-          candidates: candidates
-        };
-        result = newState;
         break;
 
       default:
@@ -94570,19 +94585,12 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   });
 
   exports.default = _default;
-},594,[1,46,595,582,596],"RestaurantReducers.js");
-__d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
-  function _readOnlyError(name) {
-    throw new Error("\"" + name + "\" is read-only");
-  }
-
-  module.exports = _readOnlyError;
-},595,[],"node_modules\\@babel\\runtime\\helpers\\readOnlyError.js");
+},594,[1,46,582,596,758],"RestaurantReducers.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.SET_RESPONSE = exports.PICK_RESTAURANT = exports.FETCH_RESTAURANTS_REJECTED = exports.FETCH_RESTAURANTS_FULFILLED = exports.FETCH_RESTAURANTS_PENDING = exports.FETCH_RESTAURANTS = void 0;
+  exports.FETCH_RESTAURANTS_REJECTED = exports.FETCH_RESTAURANTS_FULFILLED = exports.FETCH_RESTAURANTS_PENDING = exports.FETCH_RESTAURANTS = void 0;
   var FETCH_RESTAURANTS = 'FETCH_RESTAURANTS';
   exports.FETCH_RESTAURANTS = FETCH_RESTAURANTS;
   var FETCH_RESTAURANTS_PENDING = 'FETCH_RESTAURANTS_PENDING';
@@ -94591,10 +94599,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   exports.FETCH_RESTAURANTS_FULFILLED = FETCH_RESTAURANTS_FULFILLED;
   var FETCH_RESTAURANTS_REJECTED = 'FETCH_RESTAURANTS_REJECTED';
   exports.FETCH_RESTAURANTS_REJECTED = FETCH_RESTAURANTS_REJECTED;
-  var PICK_RESTAURANT = 'PICK_RESTAURANT';
-  exports.PICK_RESTAURANT = PICK_RESTAURANT;
-  var SET_RESPONSE = 'SET_RESPONSE';
-  exports.SET_RESPONSE = SET_RESPONSE;
 },596,[],"RestaurantConsts.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   var _interopRequireDefault = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireDefault");
@@ -113709,8 +113713,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var _RestaurantActions = _$$_REQUIRE(_dependencyMap[11], "./RestaurantActions");
 
-  var _reactNativeGestureHandler = _$$_REQUIRE(_dependencyMap[12], "react-native-gesture-handler");
-
   var _jsxFileName = "c:\\src\\React-Native-Projects\\RestaurantNearBy\\Home.js";
   var _components = {
     Home: {
@@ -113746,30 +113748,20 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
         var text;
 
-        if (this.props.response !== undefined) {
-          var j_obj = JSON.stringify(this.props.response.data);
+        if (this.props.restaurants != null && this.props.restaurants.candidates != null && this.props.restaurants.candidates.length > 0) {
+          var randomNumber = Math.round(Math.random() * 20);
+          var selected = this.props.restaurants.candidates[randomNumber];
           text = _react.default.createElement(_reactNative.View, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 14
+              lineNumber: 17
             }
-          }, _react.default.createElement(_reactNativeGestureHandler.TextInput, {
-            editable: true,
-            multiline: true,
-            numberOfLines: 20,
-            value: j_obj,
+          }, _react.default.createElement(_reactNative.Text, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 15
+              lineNumber: 18
             }
-          }));
-        } else {
-          text = _react.default.createElement(_reactNative.Text, {
-            __source: {
-              fileName: _jsxFileName,
-              lineNumber: 19
-            }
-          }, "Response Data");
+          }, selected.name));
         }
 
         return _react.default.createElement(_reactNative.View, {
@@ -113778,24 +113770,24 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
             fileName: _jsxFileName,
             lineNumber: 22
           }
-        }, _react.default.createElement(_reactNative.Button, {
+        }, !this.props.restaurants.isFetching && _react.default.createElement(_reactNative.Button, {
           title: "Click Me",
           onPress: function onPress() {
             return _this.props.fetchRestaurants('39.999734144579,116.33970166089', '10,35', 20);
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 23
+            lineNumber: 24
           }
         }), _react.default.createElement(_reactNative.View, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 28
+            lineNumber: 30
           }
-        }, this.props.isFetching && _react.default.createElement(_reactNative.Text, {
+        }, this.props.restaurants.isFetching && _react.default.createElement(_reactNative.Text, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 30
+            lineNumber: 32
           }
         }, "Loading...")), text);
       }
@@ -113815,25 +113807,28 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   });
 
   var mapStateToProps = function mapStateToProps(state) {
-    var model = state.restaurants;
-    return model;
+    var restaurants = state.restaurants;
+    return {
+      restaurants: restaurants
+    };
   };
 
   var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     return (0, _redux.bindActionCreators)({
-      fetchRestaurants: _RestaurantActions.fetchRestaurants
+      fetchRestaurants: _RestaurantActions.fetchRestaurants,
+      pickRestaurant: _RestaurantActions.pickRestaurant
     }, dispatch);
   };
 
   var _default2 = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Home);
 
   exports.default = _default2;
-},726,[1,22,23,30,33,36,49,198,2,570,582,727,648],"Home.js");
+},726,[1,22,23,30,33,36,49,198,2,570,582,727],"Home.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.setResponse = exports.pickRestaurant = exports.fetchRestaurants = void 0;
+  exports.fetchRestaurants = void 0;
 
   var _RestaurantApi = _$$_REQUIRE(_dependencyMap[0], "./RestaurantApi");
 
@@ -113847,24 +113842,6 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   };
 
   exports.fetchRestaurants = fetchRestaurants;
-
-  var pickRestaurant = function pickRestaurant(restaurantIndex) {
-    return {
-      type: _RestaurantConsts.PICK_RESTAURANT,
-      payload: restaurantIndex
-    };
-  };
-
-  exports.pickRestaurant = pickRestaurant;
-
-  var setResponse = function setResponse(response) {
-    return {
-      type: _RestaurantConsts.SET_RESPONSE,
-      payload: response
-    };
-  };
-
-  exports.setResponse = setResponse;
 },727,[728,596],"RestaurantActions.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   var _interopRequireWildcard = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireWildcard");
@@ -114144,7 +114121,11 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     return new Promise(function (resolve, reject) {
       var url = "http://" + host_address + ":" + port + "/restaurants?location=" + location + "&price=" + price_section + "&result_count=" + result_count;
       axios.default.get(url).then(function (response) {
-        return resolve(response);
+        return resolve(response.data);
+      }).then(function (data) {
+        j_str = JSON.stringify(data);
+        j_obj = JSON.parse(j_str);
+        resolve(j_obj);
       }).catch(function (error) {
         return reject(error);
       });
@@ -115338,6 +115319,40 @@ __d(function(global, require, _aUnused, _bUnused, module, exports, _cUnused) {
   "displayName": "RestaurantNearBy"
 };
 },757,[],"app.json");
+__d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
+  var _interopRequireDefault = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireDefault");
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Restaurant = exports.Location = void 0;
+
+  var _classCallCheck2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[1], "@babel/runtime/helpers/classCallCheck"));
+
+  var Location = function Location(latitude, longitude) {
+    (0, _classCallCheck2.default)(this, Location);
+    this.latitude = latitude;
+    this.longitude = longitude;
+  };
+
+  exports.Location = Location;
+
+  var Restaurant = function Restaurant() {
+    (0, _classCallCheck2.default)(this, Restaurant);
+    this.id = 0;
+    this.address = '';
+    this.city = '';
+    this.distance = 0;
+    this.location = undefined;
+    this.name = '';
+    this.price = 0;
+    this.province = '';
+    this.rating = 0;
+    this.time = 0;
+  };
+
+  exports.Restaurant = Restaurant;
+},758,[1,22],"models.js");
 __r(86);
 __r(0);
 //# sourceMappingURL=index.map

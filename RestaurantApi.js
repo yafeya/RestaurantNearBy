@@ -302,7 +302,12 @@ export function get_restaurants(location, price_section, result_count) {
     return new Promise((resolve, reject) => {
         let url = `http://${host_address}:${port}/restaurants?location=${location}&price=${price_section}&result_count=${result_count}`;
         axios.default.get(url)
-            .then(response => resolve(response))
+            .then(response => resolve(response.data))
+            .then(data => {
+                j_str = JSON.stringify(data);
+                j_obj = JSON.parse(j_str);
+                resolve(j_obj);
+            })
             .catch(error => reject(error));
     });
 }

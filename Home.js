@@ -2,32 +2,34 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Rich } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchRestaurants } from './RestaurantActions';
-import { TextInput } from 'react-native-gesture-handler';
+import { fetchRestaurants, pickRestaurant } from './RestaurantActions';
 
 class Home extends React.Component {
 
     render() {
         let text;
-        if (this.props.response !== undefined) {
-            let j_obj = JSON.stringify(this.props.response.data)
-            text = <View>
-                <TextInput editable={true} multiline={true} numberOfLines={20} value={j_obj}></TextInput>
-            </View>
-        }
-        else {
-            text = <Text>Response Data</Text>
+        if (this.props.restaurants != null
+            && this.props.restaurants.candidates != null
+            && this.props.restaurants.candidates.length > 0) {
+            let randomNumber = Math.round(Math.random() * 20);
+            let selected = this.props.restaurants.candidates[randomNumber];
+            text =
+                <View>
+                    <Text>{selected.name}</Text>
+                </View>
         }
         return (
             <View style={styles.container}>
-                <Button
-                    title="Click Me"
-                    onPress={() =>
-                        this.props.fetchRestaurants('39.999734144579,116.33970166089', '10,35', 20)
-                    } />
+                {
+                    !this.props.restaurants.isFetching && <Button
+                        title="Click Me"
+                        onPress={() =>
+                            this.props.fetchRestaurants('39.999734144579,116.33970166089', '10,35', 20)
+                        } />
+                }
                 <View>
                     {
-                        this.props.isFetching && <Text>Loading...</Text>
+                        this.props.restaurants.isFetching && <Text>Loading...</Text>
                     }
                 </View>
                 {text}
@@ -46,13 +48,14 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const model = state.restaurants;
-    return model;
+    const { restaurants } = state;
+    return { restaurants };
 };
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
-        fetchRestaurants
+        fetchRestaurants,
+        pickRestaurant
     }, dispatch)
 );
 
