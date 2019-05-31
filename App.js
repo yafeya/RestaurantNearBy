@@ -1,37 +1,20 @@
-import React, { Component } from 'react';
-import { Alert, AppRegistry, Button, StyleSheet, View } from 'react-native';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import restaurantsReducer from './RestaurantReducers';
+import AppNavigator from './AppNavigator';
+import { createAppContainer } from 'react-navigation';
+import promise from 'redux-promise-middleware';
 
-export default class App extends Component {
-  _onPressButton(e) {
-    Alert.alert('You tapped the button!')
-  }
-
+export default class App extends React.Component {
   render() {
+    const middleware = [promise];
+    const store = createStore(restaurantsReducer, applyMiddleware(...middleware));
+    const AppContainer = createAppContainer(AppNavigator);
     return (
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={e => this._onPressButton(e)}
-            title="Press Me"
-            color="#841584"
-          />
-        </View>
-      </View>
+      <Provider store={ store }>
+        <AppContainer />
+      </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-   flex: 1,
-   justifyContent: 'center',
-  },
-  buttonContainer: {
-    margin: 20
-  },
-  alternativeLayoutButtonContainer: {
-    margin: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  }
-})
