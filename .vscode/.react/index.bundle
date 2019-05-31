@@ -94585,7 +94585,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   });
 
   exports.default = _default;
-},594,[1,46,582,596,758],"RestaurantReducers.js");
+},594,[1,46,582,595,596],"RestaurantReducers.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -94599,7 +94599,41 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   exports.FETCH_RESTAURANTS_FULFILLED = FETCH_RESTAURANTS_FULFILLED;
   var FETCH_RESTAURANTS_REJECTED = 'FETCH_RESTAURANTS_REJECTED';
   exports.FETCH_RESTAURANTS_REJECTED = FETCH_RESTAURANTS_REJECTED;
-},596,[],"RestaurantConsts.js");
+},595,[],"RestaurantConsts.js");
+__d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
+  var _interopRequireDefault = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireDefault");
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.Restaurant = exports.Location = void 0;
+
+  var _classCallCheck2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[1], "@babel/runtime/helpers/classCallCheck"));
+
+  var Location = function Location(latitude, longitude) {
+    (0, _classCallCheck2.default)(this, Location);
+    this.latitude = latitude;
+    this.longitude = longitude;
+  };
+
+  exports.Location = Location;
+
+  var Restaurant = function Restaurant() {
+    (0, _classCallCheck2.default)(this, Restaurant);
+    this.id = 0;
+    this.address = '';
+    this.city = '';
+    this.distance = 0;
+    this.location = undefined;
+    this.name = '';
+    this.price = 0;
+    this.province = '';
+    this.rating = 0;
+    this.time = 0;
+  };
+
+  exports.Restaurant = Restaurant;
+},596,[1,22],"models.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   var _interopRequireDefault = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireDefault");
 
@@ -113697,7 +113731,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
 
   var _possibleConstructorReturn2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[3], "@babel/runtime/helpers/possibleConstructorReturn"));
 
-  var _getPrototypeOf2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[4], "@babel/runtime/helpers/getPrototypeOf"));
+  var _getPrototypeOf3 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[4], "@babel/runtime/helpers/getPrototypeOf"));
 
   var _inherits2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[5], "@babel/runtime/helpers/inherits"));
 
@@ -113737,14 +113771,39 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
     (0, _inherits2.default)(Home, _React$Component);
 
     function Home() {
+      var _getPrototypeOf2;
+
+      var _this;
+
       (0, _classCallCheck2.default)(this, Home);
-      return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Home).apply(this, arguments));
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = (0, _possibleConstructorReturn2.default)(this, (_getPrototypeOf2 = (0, _getPrototypeOf3.default)(Home)).call.apply(_getPrototypeOf2, [this].concat(args)));
+      _this.Title = "Hello";
+      return _this;
     }
 
     (0, _createClass2.default)(Home, [{
+      key: "getLocation",
+      value: function getLocation() {
+        var geolocation = navigator.geolocation;
+        geolocation.getCurrentPosition(function (location) {
+          j_str = JSON.stringify(location.coords);
+          alert(j_str);
+        });
+      }
+    }, {
+      key: "_onClickGetLocation",
+      value: function _onClickGetLocation(e) {
+        this.getLocation();
+      }
+    }, {
       key: "render",
       value: function render() {
-        var _this = this;
+        var _this2 = this;
 
         var text;
 
@@ -113754,12 +113813,12 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           text = _react.default.createElement(_reactNative.View, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 17
+              lineNumber: 31
             }
           }, _react.default.createElement(_reactNative.Text, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 18
+              lineNumber: 32
             }
           }, selected.name));
         }
@@ -113768,26 +113827,35 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
           style: styles.container,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 22
+            lineNumber: 36
           }
-        }, !this.props.restaurants.isFetching && _react.default.createElement(_reactNative.Button, {
-          title: "Click Me",
-          onPress: function onPress() {
-            return _this.props.fetchRestaurants('39.999734144579,116.33970166089', '10,35', 20);
+        }, _react.default.createElement(_reactNative.Button, {
+          title: "Get Location",
+          onPress: function onPress(e) {
+            return _this2._onClickGetLocation(e);
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 24
+            lineNumber: 37
+          }
+        }), !this.props.restaurants.isFetching && _react.default.createElement(_reactNative.Button, {
+          title: "Click Me",
+          onPress: function onPress() {
+            return _this2.props.fetchRestaurants('39.999734144579,116.33970166089', '10,35', 20);
+          },
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 41
           }
         }), _react.default.createElement(_reactNative.View, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 30
+            lineNumber: 47
           }
         }, this.props.restaurants.isFetching && _react.default.createElement(_reactNative.Text, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 32
+            lineNumber: 49
           }
         }, "Loading...")), text);
       }
@@ -113842,7 +113910,7 @@ __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, e
   };
 
   exports.fetchRestaurants = fetchRestaurants;
-},727,[728,596],"RestaurantActions.js");
+},727,[728,595],"RestaurantActions.js");
 __d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
   var _interopRequireWildcard = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireWildcard");
 
@@ -115319,40 +115387,6 @@ __d(function(global, require, _aUnused, _bUnused, module, exports, _cUnused) {
   "displayName": "RestaurantNearBy"
 };
 },757,[],"app.json");
-__d(function (global, _$$_REQUIRE, _$$_IMPORT_DEFAULT, _$$_IMPORT_ALL, module, exports, _dependencyMap) {
-  var _interopRequireDefault = _$$_REQUIRE(_dependencyMap[0], "@babel/runtime/helpers/interopRequireDefault");
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.Restaurant = exports.Location = void 0;
-
-  var _classCallCheck2 = _interopRequireDefault(_$$_REQUIRE(_dependencyMap[1], "@babel/runtime/helpers/classCallCheck"));
-
-  var Location = function Location(latitude, longitude) {
-    (0, _classCallCheck2.default)(this, Location);
-    this.latitude = latitude;
-    this.longitude = longitude;
-  };
-
-  exports.Location = Location;
-
-  var Restaurant = function Restaurant() {
-    (0, _classCallCheck2.default)(this, Restaurant);
-    this.id = 0;
-    this.address = '';
-    this.city = '';
-    this.distance = 0;
-    this.location = undefined;
-    this.name = '';
-    this.price = 0;
-    this.province = '';
-    this.rating = 0;
-    this.time = 0;
-  };
-
-  exports.Restaurant = Restaurant;
-},758,[1,22],"models.js");
 __r(86);
 __r(0);
 //# sourceMappingURL=index.map

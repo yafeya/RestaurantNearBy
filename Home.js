@@ -6,6 +6,20 @@ import { fetchRestaurants, pickRestaurant } from './RestaurantActions';
 
 class Home extends React.Component {
 
+    Title = "Hello";
+
+    getLocation() {
+        var geolocation = navigator.geolocation;
+        geolocation.getCurrentPosition((location) => { 
+            j_str = JSON.stringify(location.coords);
+            alert(j_str);  
+        });
+    }
+
+    _onClickGetLocation(e) { 
+        this.getLocation();
+    }
+
     render() {
         let text;
         if (this.props.restaurants != null
@@ -20,6 +34,9 @@ class Home extends React.Component {
         }
         return (
             <View style={styles.container}>
+                <Button title="Get Location" 
+                    onPress={e=>this._onClickGetLocation(e)}
+                />
                 {
                     !this.props.restaurants.isFetching && <Button
                         title="Click Me"
